@@ -18,11 +18,10 @@ public class CAMenu {
 	private PopupMenu menu;
 	private static MenuItem miAction; // changes to start/stop too
 	private MenuItem miSetComPort; // /dev/tty.usbmodem14201 UNO
-	private MenuItem miDebugMessages;
 	private MenuItem miAbout;
 	private MenuItem miExit;
 
-	private String port;
+	private String port = "/dev/tty.usbmodem14201";
 	public static final String[] ACTION_TEXT = { "Start", "Stop" };
 	private ArduinoResolver arduinoResolver;
 
@@ -39,7 +38,6 @@ public class CAMenu {
 		menu = new PopupMenu();
 		miAction = new MenuItem(ACTION_TEXT[0]); // change this to stop once it runs
 		miSetComPort = new MenuItem("Set COM Port");
-		miDebugMessages = new MenuItem("Debug Serial Messages");
 		miAbout = new MenuItem("About");
 		miExit = new MenuItem("Exit");
 		
@@ -49,7 +47,6 @@ public class CAMenu {
 	private void populate() {
 		menu.add(miAction);
 		menu.add(miSetComPort);
-		menu.add(miDebugMessages);
 		menu.add(miAbout);
 		menu.add(miExit);
 	}
@@ -58,16 +55,17 @@ public class CAMenu {
 		miAction.addActionListener(e -> {
 			if (miAction.getLabel().equals(ACTION_TEXT[0])) {
 				if (port == null || port.isEmpty()) {
-					miAction.setEnabled(false);				// maybe need to disable all options? for fail safe in case.
+					miAction.setEnabled(false);				// maybe need to disable all options but exit? for fail safe in case.
 					DialogBox.comPortNotSetMessage();
 					miAction.setEnabled(true);
 				} else {
-					arduinoResolver = new ArduinoResolver(port);
 					miAction.setEnabled(false);
+					arduinoResolver = new ArduinoResolver(port);
 				}
 			} else if (arduinoResolver != null && miAction.getLabel().equals(ACTION_TEXT[1])) {
 				miAction.setEnabled(false);
 				arduinoResolver.close();
+				miAction.setEnabled(true);
 			}
 		});
 
@@ -76,10 +74,6 @@ public class CAMenu {
 			if (portInput != null && !portInput.trim().isEmpty()) {
 				port = portInput;
 			}
-		});
-
-		miDebugMessages.addActionListener(e -> {
-
 		});
 
 		miAbout.addActionListener(e -> {
