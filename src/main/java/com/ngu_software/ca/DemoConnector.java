@@ -44,7 +44,7 @@ public class DemoConnector implements SerialPortEventListener {
 		
 		if (portId == null) {
 			System.out.println("Could not find COM port.");
-			DialogBox.COM_ERROR();
+			DialogBox.comPortNotFoundMessage();
 			return;
 		}
 		

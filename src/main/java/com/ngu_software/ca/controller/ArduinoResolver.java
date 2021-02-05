@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.util.Enumeration;
 
 import com.ngu_software.ca.model.FileMonitor;
+import com.ngu_software.ca.ui.CAMenu;
 import com.ngu_software.ca.ui.DialogBox;
 
 import gnu.io.CommPortIdentifier;
@@ -40,7 +41,8 @@ public class ArduinoResolver implements SerialPortEventListener {
 		}
 		
 		if (portId == null) {
-			DialogBox.COM_ERROR();
+			DialogBox.comPortNotFoundMessage();
+			resetActionMenu();
 			return;
 		}
 		
@@ -56,7 +58,16 @@ public class ArduinoResolver implements SerialPortEventListener {
 //			fileMonitor = new FileMonitor();
 		} catch (Exception e) {
 			DialogBox.displaySystemMessage(e);
+			resetActionMenu();
+			return;
 		}
+		
+		CAMenu.getActionMenu().setEnabled(true);
+	}
+	
+	private void resetActionMenu() {
+		CAMenu.getActionMenu().setLabel(CAMenu.ACTION_TEXT[0]);
+		CAMenu.getActionMenu().setEnabled(true);
 	}
 	
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
@@ -96,6 +107,8 @@ public class ArduinoResolver implements SerialPortEventListener {
 			serialPort.removeEventListener();
 			serialPort.close();
 		}
+		
+		resetActionMenu();
 	}
 
 }
