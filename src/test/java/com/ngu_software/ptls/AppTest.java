@@ -1,4 +1,4 @@
-package com.ngu_software.itls;
+package com.ngu_software.ptls;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
