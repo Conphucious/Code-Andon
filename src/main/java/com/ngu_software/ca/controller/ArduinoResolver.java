@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Enumeration;
 
+import com.ngu_software.ca.model.FileMonitor;
 import com.ngu_software.ca.ui.DialogBox;
 
 import gnu.io.CommPortIdentifier;
@@ -22,6 +23,8 @@ public class ArduinoResolver implements SerialPortEventListener {
 	private static final int BALD_DATA_RATE = 9600;
 	private final String PORT_KEY = "gnu.io.rxtx.SerialPorts";
 	private CommPortIdentifier currPortId;
+	
+	private FileMonitor fileMonitor;
 	
 	public ArduinoResolver(String port) {
 		System.setProperty(PORT_KEY, port);
@@ -49,8 +52,10 @@ public class ArduinoResolver implements SerialPortEventListener {
 
 			serialPort.addEventListener(this);
 			serialPort.notifyOnDataAvailable(true);
+			
+//			fileMonitor = new FileMonitor();
 		} catch (Exception e) {
-			System.err.println(e.toString());
+			DialogBox.displaySystemMessage(e);
 		}
 	}
 	

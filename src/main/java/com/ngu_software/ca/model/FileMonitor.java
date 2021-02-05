@@ -17,6 +17,7 @@ public class FileMonitor {
 	}
 	
 	public void updateFile() {
+		this.fileLastModified = file.lastModified();
 	}
 
 	public File getFile() {
