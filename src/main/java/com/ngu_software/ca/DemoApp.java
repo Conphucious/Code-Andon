@@ -1,4 +1,4 @@
-package com.ngu_software.ptls;
+package com.ngu_software.ca;
 
 public class DemoApp {
 

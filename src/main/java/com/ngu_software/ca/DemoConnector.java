@@ -1,4 +1,4 @@
-package com.ngu_software.ptls;
+package com.ngu_software.ca;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.Scanner;
 
-import com.ngu_software.ptls.ui.DialogBox;
+import com.ngu_software.ca.ui.DialogBox;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;

@@ -1,4 +1,4 @@
-package com.ngu_software.ptls.controller;
+package com.ngu_software.ca.controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Enumeration;
 
-import com.ngu_software.ptls.ui.DialogBox;
+import com.ngu_software.ca.ui.DialogBox;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;

@@ -1,4 +1,4 @@
-package com.ngu_software.ptls.ui;
+package com.ngu_software.ca.ui;
 
 import javax.swing.JOptionPane;
 

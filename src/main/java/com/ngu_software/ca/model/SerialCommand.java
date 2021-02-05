@@ -1,4 +1,4 @@
-package com.ngu_software.ptls.model;
+package com.ngu_software.ca.model;
 
 public enum SerialCommand {
 	TX_RED_LIGHT('r'),

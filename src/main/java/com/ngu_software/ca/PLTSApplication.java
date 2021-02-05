@@ -1,4 +1,4 @@
-package com.ngu_software.ptls;
+package com.ngu_software.ca;
 
 import java.awt.AWTException;
 import java.awt.MenuItem;
@@ -9,7 +9,7 @@ import java.awt.TrayIcon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-import com.ngu_software.ptls.controller.ArduinoResolver;
+import com.ngu_software.ca.controller.ArduinoResolver;
 
 public class PLTSApplication {
 
