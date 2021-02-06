@@ -64,6 +64,12 @@ public class ArduinoResolver implements SerialPortEventListener {
 		
 		CAMenu.getActionMenu().setEnabled(true);
 		CAMenu.getActionMenu().setLabel(CAMenu.ACTION_TEXT[1]);
+		
+		try {
+			output = serialPort.getOutputStream();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 	}
 	
 	// take int to change text?
@@ -74,12 +80,6 @@ public class ArduinoResolver implements SerialPortEventListener {
 	
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
 		int test = 0;
-		try {
-			output = serialPort.getOutputStream();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 //		FileMonitor fm = new FileMonitor(new File("pom.xml"));
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
@@ -100,23 +100,41 @@ public class ArduinoResolver implements SerialPortEventListener {
 			} catch (IOException e) {
 				DialogBox.displaySystemMessage(e);
 			}
-			
 		}
 	}
 	
 	public synchronized void close() {
 		// https://stackoverflow.com/questions/28766941/how-do-i-close-a-commport-in-rxtx
-		
-		if (serialPort != null) {
-			serialPort.removeEventListener();
-			serialPort.close();
-			try {
-				input.close();
-				output.close();
-			} catch (IOException e) {
-				DialogBox.displaySystemMessage(e);
+		System.out.println("CLOSE");
+		serialPort.notifyOnDataAvailable(false);
+		new Thread() {
+			public void run() {
+				if (serialPort != null) {
+					try {
+						input.close();
+						output.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+//					serialPort.removeEventListener();
+					serialPort.close();
+//				System.out.println("YE");
+//					this.destroy();
+				}
 			}
-		}
+		}.start();
+		
+//		if (serialPort != null) {
+//			try {
+//				input.close();
+//				output.close();
+//			} catch (IOException e) {
+//				DialogBox.displaySystemMessage(e);
+//			}
+//			
+//			serialPort.removeEventListener();
+//			serialPort.close();
+//		}
 		resetActionMenu();
 	}
 

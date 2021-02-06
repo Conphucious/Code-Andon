@@ -35,7 +35,7 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("Waiting for message...");
+  Serial.println("W");
   
   if (Serial.available() > 0) {
     char input = Serial.read();
@@ -43,7 +43,7 @@ void loop() {
     digitalWrite(RELAY_PIN_LIGHT_RED, LOW);
     currentActivePin = RELAY_PIN_LIGHT_RED;
   } else {
-    Serial.println("NO");
+    Serial.println("N");
     digitalWrite(RELAY_PIN_LIGHT_RED, HIGH);
     digitalWrite(RELAY_PIN_LIGHT_YELLOW, HIGH);
     digitalWrite(RELAY_PIN_LIGHT_GREEN, HIGH);
@@ -59,7 +59,7 @@ void loop() {
   delay(500);
   if (currentActivePin == RELAY_PIN_LIGHT_RED) {
     digitalWrite(RELAY_PIN_LIGHT_RED, HIGH);
-    Serial.println("AYE");
+    Serial.print("AYE");
   }
 
 //  if (digitalRead(BUTTON_PIN_OVERRIDE) == HIGH) {

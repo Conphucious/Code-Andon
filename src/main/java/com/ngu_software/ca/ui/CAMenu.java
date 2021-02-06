@@ -21,7 +21,7 @@ public class CAMenu {
 	private MenuItem miAbout;
 	private MenuItem miExit;
 
-	private String port = "/dev/tty.usbmodem14201";
+	private String port = "/dev/tty.usbmodem14101";
 	public static final String[] ACTION_TEXT = { "Start", "Stop" };
 	private ArduinoResolver arduinoResolver;
 

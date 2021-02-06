@@ -1,12 +1,10 @@
 package com.ngu_software.ca;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Enumeration;
-import java.util.Scanner;
 
 import com.ngu_software.ca.ui.DialogBox;
 
@@ -18,15 +16,15 @@ import gnu.io.SerialPortEventListener;
 public class DemoConnector implements SerialPortEventListener {
 
 	private SerialPort serialPort;
-	
+
 	private BufferedReader input;
 	private OutputStream output;
 	private static final int TIME_OUT = 2000;
 	private static final int BALD_DATA_RATE = 9600;
-	
+
 	private final String PORT_KEY = "gnu.io.rxtx.SerialPorts";
-	private final String[] PORTS = {"/dev/tty.usbserial-AQ016BUL", "/dev/tty.usbmodem14201"};
-	
+	private final String[] PORTS = { "/dev/tty.usbserial-AQ016BUL", "/dev/tty.usbmodem14201" };
+
 	public void initialize() {
 		System.setProperty(PORT_KEY, PORTS[0]);
 		CommPortIdentifier portId = null;
@@ -41,16 +39,17 @@ public class DemoConnector implements SerialPortEventListener {
 				break;
 			}
 		}
-		
+
 		if (portId == null) {
 			System.out.println("Could not find COM port.");
 			DialogBox.comPortNotFoundMessage();
 			return;
 		}
-		
+
 		try {
 			serialPort = (SerialPort) portId.open(this.getClass().getName(), TIME_OUT);
-			serialPort.setSerialPortParams(BALD_DATA_RATE, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+			serialPort.setSerialPortParams(BALD_DATA_RATE, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
+					SerialPort.PARITY_NONE);
 
 			input = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
 
@@ -60,9 +59,9 @@ public class DemoConnector implements SerialPortEventListener {
 			System.err.println(e.toString());
 		}
 	}
-	
+
 	public static int test = -999;
-	
+
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
 		try {
 			output = serialPort.getOutputStream();
@@ -75,7 +74,7 @@ public class DemoConnector implements SerialPortEventListener {
 			try {
 				String inputLine = input.readLine();
 				System.out.println("_" + inputLine + "_");
-				
+
 				if (test == 0) {
 					test = 1;
 					output.write("r".getBytes());
@@ -83,23 +82,34 @@ public class DemoConnector implements SerialPortEventListener {
 					output.write("y".getBytes());
 					test = 0;
 				}
-				
+
 				output.flush();
 //				System.out.println(fm.wasModified());
-				
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+
 		}
 	}
-	
+
 	public synchronized void close() {
-		if (serialPort != null) {
-			serialPort.removeEventListener();
-			serialPort.close();
-		}
+		new Thread() {
+			public void run() {
+//				if (serialPort != null) {
+//					try {
+//						input.close();
+//						output.close();
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//					}
+//					serialPort.removeEventListener();
+//					serialPort.close();
+//				System.out.println("YE");
+//					this.destroy();
+//				}
+			}
+		}.start();
 	}
-	
 
 }
