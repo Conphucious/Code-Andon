@@ -1,9 +1,5 @@
 package com.ngu_software.ca;
 
-import jssc.SerialPort;
-import jssc.SerialPortException;
-import jssc.SerialPortList;
-
 public class Test {
 
 	public static void main(String[] args) {

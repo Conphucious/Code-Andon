@@ -4,10 +4,11 @@ import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
+import jssc.SerialPortList;
 
 public class AResolver implements SerialPortEventListener {
 
-	SerialPort port = new SerialPort("/dev/tty.usbmodem14101");
+	SerialPort port = new SerialPort("/dev/tty.usbmodem14201");
 
 	public AResolver() {
 		try {
@@ -22,22 +23,16 @@ public class AResolver implements SerialPortEventListener {
 	}
 
 	public void serialEvent(SerialPortEvent event) {
-		if (event.isRXCHAR() && event.getEventValue() > 0) { // data is available
-
+		if (event.isRXCHAR() && event.getEventValue() > 0) {
 			try {
 				String receivedData = port.readString(1).trim().replace("\n", "");//.readString(event.getEventValue());
 				if (!receivedData.isEmpty()) {
 					System.out.println("Received response: " + receivedData);
 				}
-				
-//				System.out.println("w".getBytes().length);
-//				String output = port.readString(100);//.readString(11);//.readString();
-//				System.out.println(output);
 			} catch (SerialPortException e) {
 				e.printStackTrace();
 			}
-
 		}
 	}
-
+	
 }

@@ -10,7 +10,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import com.ngu_software.ca.AResolver;
 import com.ngu_software.ca.controller.ArduinoResolver;
+
+import jssc.SerialPortList;
 
 public class CAMenu {
 
@@ -24,6 +27,8 @@ public class CAMenu {
 	private String port = "/dev/tty.usbmodem14101";
 	public static final String[] ACTION_TEXT = { "Start", "Stop" };
 	private ArduinoResolver arduinoResolver;
+	
+	private AResolver ar;
 
 	public CAMenu() {
 		// load previous port by saving to file and loading?
@@ -46,6 +51,11 @@ public class CAMenu {
 
 	private void populate() {
 		menu.add(miAction);
+		
+//		PopupMenu mis = new PopupMenu();
+//		mis.add(new MenuItem("asd"));
+//		SerialPortList.getPortNames()
+
 		menu.add(miSetComPort);
 		menu.add(miAbout);
 		menu.add(miExit);
@@ -70,10 +80,13 @@ public class CAMenu {
 		});
 
 		miSetComPort.addActionListener(e -> {
-			String portInput = DialogBox.getInput("Enter a COM Port (current value is: " + port + ")");
-			if (portInput != null && !portInput.trim().isEmpty()) {
-				port = portInput;
-			}
+//			String portInput = DialogBox.getInput("Enter a COM Port (current value is: " + port + ")");
+//			if (portInput != null && !portInput.trim().isEmpty()) {
+//				port = portInput;
+//			}
+			
+			String[] options = SerialPortList.getPortNames();
+			String n = (String)JOptionPane.showInputDialog(null, "Do you like turtles??", "I like turtles", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 		});
 
 		miAbout.addActionListener(e -> {
