@@ -1,4 +1,4 @@
-package com.ngu_software.ca.ui;
+package com.ngu_software.ca.view;
 
 import jssc.SerialPortList;
 
@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 
 public class DialogBox {
 
-    private static final String TITLE = "JPTLS";
+    private static final String TITLE = "Jimmy's Code Andon";
 
     public static void aboutMessage() {
         JOptionPane.showMessageDialog(null, "https://github.com/Conphucious", TITLE, 1);
@@ -14,6 +14,10 @@ public class DialogBox {
 
     public static void portNotSetMessage() {
         JOptionPane.showMessageDialog(null, "COM Port has not yet been set", TITLE, 1);
+    }
+
+    public static void portFileLoadErrorMessage() {
+        JOptionPane.showMessageDialog(null, "An error has occured loading last set port!", TITLE, 1);
     }
 
     public static void displaySystemMessage(Exception e) {

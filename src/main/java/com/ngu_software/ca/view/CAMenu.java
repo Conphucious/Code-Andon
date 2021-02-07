@@ -1,6 +1,7 @@
-package com.ngu_software.ca.ui;
+package com.ngu_software.ca.view;
 
 import com.ngu_software.ca.controller.ArduinoSerialResolver;
+import com.ngu_software.ca.model.PortPropsFile;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,17 +11,17 @@ public class CAMenu {
 	private TrayIcon trayIcon;
 	private PopupMenu menu;
 	private static MenuItem miAction;
-	private MenuItem miSetComPort; // /dev/tty.usbmodem14201 UNO
+	private MenuItem miSetPort;
 	private MenuItem miAbout;
 	private MenuItem miExit;
 
 	private static String port = "null";
 	public static final String[] ACTION_TEXT = { "Start", "Stop" };
 	private ArduinoSerialResolver arduinoSerialResolver;
+	private PortPropsFile portPropsFile;
 	
 	public CAMenu() {
-		// load previous port by saving to file and loading?
-		initialize();
+		initialize(); // load previous port by saving to file and loading?
 		populate();
 		setEvents();
 		setProperties();
@@ -30,14 +31,16 @@ public class CAMenu {
 		trayIcon = new TrayIcon(new ImageIcon("splash.jpg").getImage());
 		menu = new PopupMenu();
 		miAction = new MenuItem(ACTION_TEXT[0]);
-		miSetComPort = new MenuItem("Set COM Port");
+		miSetPort = new MenuItem("Set COM Port");
 		miAbout = new MenuItem("About");
 		miExit = new MenuItem("Exit");
+		portPropsFile = new PortPropsFile();
+		port = portPropsFile.retrievePort();
 	}
 
 	private void populate() {
 		menu.add(miAction);
-		menu.add(miSetComPort);
+		menu.add(miSetPort);
 		menu.add(miAbout);
 		menu.add(miExit);
 	}
@@ -57,9 +60,10 @@ public class CAMenu {
 			miAction.setEnabled(true);
 		});
 
-		miSetComPort.addActionListener(e -> {
+		miSetPort.addActionListener(e -> {
 			setOptionVisiblity(false);
 			port = DialogBox.requestSetPort(port);
+			portPropsFile.savePort(port);
 			setOptionVisiblity(true);
 		});
 

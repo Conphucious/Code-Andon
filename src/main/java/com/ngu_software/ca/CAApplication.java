@@ -1,6 +1,6 @@
 package com.ngu_software.ca;
 
-import com.ngu_software.ca.ui.CAMenu;
+import com.ngu_software.ca.view.CAMenu;
 
 public class CAApplication {
 

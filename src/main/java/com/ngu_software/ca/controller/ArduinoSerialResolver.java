@@ -1,12 +1,11 @@
 package com.ngu_software.ca.controller;
 
-import com.ngu_software.ca.ui.CAMenu;
-import com.ngu_software.ca.ui.DialogBox;
+import com.ngu_software.ca.view.CAMenu;
+import com.ngu_software.ca.view.DialogBox;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
-import jssc.SerialPortList;
 
 public class ArduinoSerialResolver implements SerialPortEventListener {
 
@@ -49,5 +48,4 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 			e.printStackTrace();
 		}
 	}
-	
 }
