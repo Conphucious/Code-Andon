@@ -1,19 +1,9 @@
 package com.ngu_software.ca.ui;
 
-import java.awt.AWTException;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
-import java.awt.SystemTray;
-import java.awt.TrayIcon;
+import com.ngu_software.ca.controller.ArduinoSerialResolver;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
-import com.ngu_software.ca.AResolver;
-import com.ngu_software.ca.controller.ArduinoResolver;
-
-import jssc.SerialPortList;
+import javax.swing.*;
+import java.awt.*;
 
 public class CAMenu {
 
@@ -24,12 +14,10 @@ public class CAMenu {
 	private MenuItem miAbout;
 	private MenuItem miExit;
 
-	private String port = "/dev/tty.usbmodem14101";
+	private static String port = "null";
 	public static final String[] ACTION_TEXT = { "Start", "Stop" };
-	private ArduinoResolver arduinoResolver;
+	private ArduinoSerialResolver arduinoSerialResolver;
 	
-	private AResolver ar;
-
 	public CAMenu() {
 		// load previous port by saving to file and loading?
 		initialize();
@@ -45,17 +33,10 @@ public class CAMenu {
 		miSetComPort = new MenuItem("Set COM Port");
 		miAbout = new MenuItem("About");
 		miExit = new MenuItem("Exit");
-		
-		arduinoResolver = null;
 	}
 
 	private void populate() {
 		menu.add(miAction);
-		
-//		PopupMenu mis = new PopupMenu();
-//		mis.add(new MenuItem("asd"));
-//		SerialPortList.getPortNames()
-
 		menu.add(miSetComPort);
 		menu.add(miAbout);
 		menu.add(miExit);
@@ -70,23 +51,17 @@ public class CAMenu {
 					miAction.setEnabled(true);
 				} else {
 					miAction.setEnabled(false);
-					arduinoResolver = new ArduinoResolver(port);
+					arduinoSerialResolver = new ArduinoSerialResolver(port);
 				}
-			} else if (arduinoResolver != null && miAction.getLabel().equals(ACTION_TEXT[1])) {
+			} else if (arduinoSerialResolver != null && miAction.getLabel().equals(ACTION_TEXT[1])) {
 				miAction.setEnabled(false);
-				arduinoResolver.close();
+				arduinoSerialResolver.close();
 				miAction.setEnabled(true);
 			}
 		});
 
 		miSetComPort.addActionListener(e -> {
-//			String portInput = DialogBox.getInput("Enter a COM Port (current value is: " + port + ")");
-//			if (portInput != null && !portInput.trim().isEmpty()) {
-//				port = portInput;
-//			}
-			
-			String[] options = SerialPortList.getPortNames();
-			String n = (String)JOptionPane.showInputDialog(null, "Do you like turtles??", "I like turtles", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+			port = DialogBox.requestSetPort(port);
 		});
 
 		miAbout.addActionListener(e -> {

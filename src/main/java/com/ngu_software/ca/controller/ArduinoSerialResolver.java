@@ -1,25 +1,32 @@
-package com.ngu_software.ca;
+package com.ngu_software.ca.controller;
 
+import com.ngu_software.ca.ui.CAMenu;
+import com.ngu_software.ca.ui.DialogBox;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import jssc.SerialPortList;
 
-public class AResolver implements SerialPortEventListener {
+public class ArduinoSerialResolver implements SerialPortEventListener {
 
-	SerialPort port = new SerialPort("/dev/tty.usbmodem14201");
+	private SerialPort port;
 
-	public AResolver() {
+	public ArduinoSerialResolver(String comPortName) {
 		try {
+			port = new SerialPort(comPortName);
 			port.openPort();
 			port.setParams(9600, 8, 1, 0);
 			int mask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR;
 			port.setEventsMask(mask);
 			port.addEventListener(this);
 		} catch (SerialPortException e) {
-			e.printStackTrace();
+			DialogBox.displaySystemMessage(e);
+			return;
 		}
+
+		CAMenu.getActionMenu().setEnabled(true);
+		CAMenu.getActionMenu().setLabel("Stop");
 	}
 
 	public void serialEvent(SerialPortEvent event) {
@@ -32,6 +39,15 @@ public class AResolver implements SerialPortEventListener {
 			} catch (SerialPortException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	public void close() {
+		try {
+			port.closePort();
+			CAMenu.getActionMenu().setLabel("Start");
+		} catch (SerialPortException e) {
+			e.printStackTrace();
 		}
 	}
 	
