@@ -2,12 +2,12 @@ package com.ngu_software.ca.model;
 
 import java.io.File;
 
-public class FileMonitor {
+public class LogMonitor {
 	
 	private File file;
 	private long fileLastModified;
 	
-	public FileMonitor(File file) {
+	public LogMonitor(File file) {
 		this.file = file;
 		fileLastModified = file.lastModified();
 	}

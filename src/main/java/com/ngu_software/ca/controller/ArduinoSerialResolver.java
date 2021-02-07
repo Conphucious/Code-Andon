@@ -25,8 +25,7 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 			return;
 		}
 
-		CAMenu.getActionMenu().setEnabled(true);
-		CAMenu.getActionMenu().setLabel("Stop");
+		CAMenu.toggleActionMenuItem();
 	}
 
 	public void serialEvent(SerialPortEvent event) {
@@ -45,7 +44,7 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 	public void close() {
 		try {
 			port.closePort();
-			CAMenu.getActionMenu().setLabel("Start");
+			CAMenu.toggleActionMenuItem();
 		} catch (SerialPortException e) {
 			e.printStackTrace();
 		}

@@ -6,7 +6,6 @@ public enum SerialCommand {
 	TX_GREEN_LIGHT('g'),
 	TX_ALL_LIGHT_OFF('x');
 
-	
 	private final Character charVal;
 	private SerialCommand(Character charVal) { this.charVal = charVal;}
 	
