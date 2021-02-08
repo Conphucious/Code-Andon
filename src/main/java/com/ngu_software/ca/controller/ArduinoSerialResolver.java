@@ -1,7 +1,11 @@
 package com.ngu_software.ca.controller;
 
+import java.io.File;
+
+import com.ngu_software.ca.model.LogMonitor;
 import com.ngu_software.ca.view.CAMenu;
 import com.ngu_software.ca.view.DialogBox;
+
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
@@ -10,6 +14,7 @@ import jssc.SerialPortException;
 public class ArduinoSerialResolver implements SerialPortEventListener {
 
 	private SerialPort port;
+	private LogMonitor lmBuildCompile, lmRuntime;
 
 	public ArduinoSerialResolver(String comPortName) {
 		try {
@@ -19,6 +24,9 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 			int mask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR;
 			port.setEventsMask(mask);
 			port.addEventListener(this);
+			
+			lmBuildCompile = new LogMonitor(new File("build.txt"));
+			lmRuntime = new LogMonitor(new File("run.txt"));
 		} catch (SerialPortException e) {
 			DialogBox.displaySystemMessage(e);
 			return;
@@ -28,6 +36,9 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 	}
 
 	public void serialEvent(SerialPortEvent event) {
+		
+		
+		
 		if (event.isRXCHAR() && event.getEventValue() > 0) {
 			try {
 				String receivedData = port.readString(1).trim().replace("\n", "");//.readString(event.getEventValue());

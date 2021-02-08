@@ -11,7 +11,7 @@ public class CAMenu {
 	private TrayIcon trayIcon;
 	private PopupMenu menu;
 	private static MenuItem miAction;
-	private MenuItem miSetPort;
+	private MenuItem miSetPort, miSetBuildFile, miSetRuntimeFile;
 	private MenuItem miAbout;
 	private MenuItem miExit;
 
@@ -19,7 +19,7 @@ public class CAMenu {
 	public static final String[] ACTION_TEXT = { "Start", "Stop" };
 	private ArduinoSerialResolver arduinoSerialResolver;
 	private PortPropsFile portPropsFile;
-	
+
 	public CAMenu() {
 		initialize(); // load previous port by saving to file and loading?
 		populate();
@@ -28,10 +28,12 @@ public class CAMenu {
 	}
 
 	private void initialize() {
-		trayIcon = new TrayIcon(new ImageIcon("splash.jpg").getImage());
+		trayIcon = new TrayIcon(new ImageIcon("icon.png").getImage());
 		menu = new PopupMenu();
 		miAction = new MenuItem(ACTION_TEXT[0]);
-		miSetPort = new MenuItem("Set COM Port");
+		miSetPort = new MenuItem("Set COM Arduino Port");
+		miSetBuildFile = new MenuItem("Set Build Log File");
+		miSetRuntimeFile = new MenuItem("Set Runtime Log File");
 		miAbout = new MenuItem("About");
 		miExit = new MenuItem("Exit");
 		portPropsFile = new PortPropsFile();
@@ -41,12 +43,14 @@ public class CAMenu {
 	private void populate() {
 		menu.add(miAction);
 		menu.add(miSetPort);
+		menu.add(miSetBuildFile);
+		menu.add(miSetRuntimeFile);
 		menu.add(miAbout);
 		menu.add(miExit);
 	}
 
 	private void setEvents() {
-		miAction.addActionListener(e -> {
+		miAction.addActionListener(e -> {							// need to check log files here too.
 			if (miAction.getLabel().equals(ACTION_TEXT[0])) {
 				miAction.setEnabled(false);
 				if (port == null || port.trim().isEmpty()) {
@@ -62,9 +66,21 @@ public class CAMenu {
 
 		miSetPort.addActionListener(e -> {
 			setOptionVisiblity(false);
-			port = DialogBox.requestSetPort(port);
-			portPropsFile.savePort(port);
+			port = DialogBox.getPort(port);
+			if (port == null) {
+				DialogBox.noPortsAvailableMessage();
+			} else {
+				portPropsFile.savePort(port);
+			}
 			setOptionVisiblity(true);
+		});
+
+		miSetBuildFile.addActionListener(e -> {
+			DialogBox.getLogFile();
+		});
+
+		miSetRuntimeFile.addActionListener(e -> {
+			DialogBox.getLogFile();
 		});
 
 		miAbout.addActionListener(e -> {
