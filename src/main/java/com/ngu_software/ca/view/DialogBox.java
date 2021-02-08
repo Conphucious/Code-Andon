@@ -4,6 +4,7 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
 import jssc.SerialPortList;
@@ -38,16 +39,19 @@ public class DialogBox {
         JOptionPane.showMessageDialog(null, "No COM Ports available", TITLE, 1);
     }
     
-    public static void getLogFile() {
+    public static File getLogFile() {
     	 JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-
+    	 jfc.setAcceptAllFileFilterUsed(false);
+         FileNameExtensionFilter filter = new FileNameExtensionFilter("Text/Log files", "txt", "log");
+         jfc.addChoosableFileFilter(filter);
          int returnValue = jfc.showOpenDialog(null);
-         // int returnValue = jfc.showSaveDialog(null);
 
          if (returnValue == JFileChooser.APPROVE_OPTION) {
              File selectedFile = jfc.getSelectedFile();
-             System.out.println(selectedFile.getAbsolutePath());
+             return jfc.getSelectedFile();
          }
+         
+         return null;
     }
 
 
