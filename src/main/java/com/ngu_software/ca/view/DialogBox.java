@@ -11,32 +11,36 @@ import jssc.SerialPortList;
 
 public class DialogBox {
 
-    private static final String TITLE = "Jimmy's Code Andon";
+    private static final String TITLE = "TKJ - Code Andon";
 
-    public static void aboutMessage() {
-        JOptionPane.showMessageDialog(null, "https://github.com/Conphucious", TITLE, 1);
+    
+    // GENERAL
+    public static void showMessage(String message) {
+        JOptionPane.showMessageDialog(null, message, TITLE, 3);
     }
-
-
-    public static void portFileLoadErrorMessage() {
-        JOptionPane.showMessageDialog(null, "An error has occured loading last set port!", TITLE, 1);
-    }
-
-    public static void displaySystemMessage(Exception e) {
+    
+    public static void showSystemMessage(Exception e) {
         JOptionPane.showMessageDialog(null, e.toString(), TITLE, 1);
     }
 
-    public static String getPort(String currentPort) {
-        String[] options = SerialPortList.getPortNames();
-        return options.length == 0 ? null : (String) JOptionPane.showInputDialog(null, "Current port: " + currentPort + "\n\nSelect a COM port.", TITLE, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-    }
-    
+    // ERROR MESSAGES
     public static void portNotSetMessage() {
-        JOptionPane.showMessageDialog(null, "COM Port has not yet been set", TITLE, 1);
+        JOptionPane.showMessageDialog(null, "COM Port is null", TITLE, 1);
     }
     
     public static void noPortsAvailableMessage() {
         JOptionPane.showMessageDialog(null, "No COM Ports available", TITLE, 1);
+    }
+    
+    public static void portFileLoadErrorMessage() {
+        JOptionPane.showMessageDialog(null, "An error has occured loading last set port!", TITLE, 1);
+    }
+
+    
+    // INPUTS
+    public static String getPort(String currentPort) {
+        String[] options = SerialPortList.getPortNames();
+        return options.length == 0 ? null : (String) JOptionPane.showInputDialog(null, "Current port: " + currentPort + "\n\nSelect a COM port.", TITLE, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
     }
     
     public static File getLogFile() {

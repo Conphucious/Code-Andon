@@ -1,10 +1,16 @@
 package com.ngu_software.ca.view;
 
-import com.ngu_software.ca.controller.ArduinoSerialResolver;
-import com.ngu_software.ca.model.PortPropsFile;
+import java.awt.AWTException;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
+import java.io.File;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ImageIcon;
+
+import com.ngu_software.ca.controller.ArduinoSerialResolver;
+import com.ngu_software.ca.model.CAPropertiesManager;
 
 public class CAMenu {
 
@@ -12,13 +18,12 @@ public class CAMenu {
 	private PopupMenu menu;
 	private static MenuItem miAction;
 	private MenuItem miSetPort, miSetBuildFile, miSetRuntimeFile;
-	private MenuItem miAbout;
+	private MenuItem miInformation;
 	private MenuItem miExit;
 
-	private static String port = "null";
 	public static final String[] ACTION_TEXT = { "Start", "Stop" };
 	private ArduinoSerialResolver arduinoSerialResolver;
-	private PortPropsFile portPropsFile;
+	private CAPropertiesManager propsManager;
 
 	public CAMenu() {
 		initialize(); // load previous port by saving to file and loading?
@@ -34,10 +39,11 @@ public class CAMenu {
 		miSetPort = new MenuItem("Set COM Arduino Port");
 		miSetBuildFile = new MenuItem("Set Build Log File");
 		miSetRuntimeFile = new MenuItem("Set Runtime Log File");
-		miAbout = new MenuItem("About");
+		miInformation = new MenuItem("Config Information");
 		miExit = new MenuItem("Exit");
-		portPropsFile = new PortPropsFile();
-		port = portPropsFile.retrievePort();
+		
+		propsManager = new CAPropertiesManager();
+		propsManager.loadProperties();
 	}
 
 	private void populate() {
@@ -45,14 +51,16 @@ public class CAMenu {
 		menu.add(miSetPort);
 		menu.add(miSetBuildFile);
 		menu.add(miSetRuntimeFile);
-		menu.add(miAbout);
+		menu.add(miInformation);
 		menu.add(miExit);
 	}
 
 	private void setEvents() {
-		miAction.addActionListener(e -> {							// need to check log files here too.
+		miAction.addActionListener(e -> { // need to check log files here too.
 			if (miAction.getLabel().equals(ACTION_TEXT[0])) {
 				miAction.setEnabled(false);
+
+				String port = propsManager.getProps().getComPort();
 				if (port == null || port.trim().isEmpty()) {
 					DialogBox.portNotSetMessage();
 				} else {
@@ -66,26 +74,37 @@ public class CAMenu {
 
 		miSetPort.addActionListener(e -> {
 			setOptionVisiblity(false);
-			port = DialogBox.getPort(port);
+			String port = DialogBox.getPort(propsManager.getProps().getComPort());
 			if (port == null) {
 				DialogBox.noPortsAvailableMessage();
 			} else {
-				portPropsFile.savePort(port);
+				propsManager.saveComPort(port);
 			}
 			setOptionVisiblity(true);
 		});
 
 		miSetBuildFile.addActionListener(e -> {
-			DialogBox.getLogFile();
+			File buildLogFile = DialogBox.getLogFile();
+
+			if (buildLogFile != null && buildLogFile.exists()) {
+				propsManager.saveBuildLogFile(buildLogFile.toString());
+			}
 		});
 
 		miSetRuntimeFile.addActionListener(e -> {
-			DialogBox.getLogFile();
+			File runtimeLogFile = DialogBox.getLogFile();
+
+			if (runtimeLogFile != null && runtimeLogFile.exists()) {
+				propsManager.saveRuntimeLogFile(runtimeLogFile.toString());
+			}
 		});
 
-		miAbout.addActionListener(e -> {
+		miInformation.addActionListener(e -> {
 			setOptionVisiblity(false);
-			DialogBox.aboutMessage();
+			DialogBox.showMessage("Current Port: " + propsManager.getProps().getComPort() + "\n" 
+					+ "Build Log File: " + propsManager.getProps().getBuildLogFile() + "\n" 
+					+ "Runtime Log File: " + propsManager.getProps().getRuntimeLogFile() + "\n\n" 
+					+ "About: https://github.com/Conphucious");
 			setOptionVisiblity(true);
 		});
 
@@ -100,7 +119,7 @@ public class CAMenu {
 		try {
 			SystemTray.getSystemTray().add(trayIcon);
 		} catch (AWTException e) {
-			DialogBox.displaySystemMessage(e);
+			DialogBox.showSystemMessage(e);
 		}
 	}
 

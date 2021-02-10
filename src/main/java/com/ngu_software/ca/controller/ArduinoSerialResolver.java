@@ -28,7 +28,7 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 			lmBuildCompile = new LogMonitor(new File("build.txt"));
 			lmRuntime = new LogMonitor(new File("run.txt"));
 		} catch (SerialPortException e) {
-			DialogBox.displaySystemMessage(e);
+			DialogBox.showSystemMessage(e);
 			return;
 		}
 
