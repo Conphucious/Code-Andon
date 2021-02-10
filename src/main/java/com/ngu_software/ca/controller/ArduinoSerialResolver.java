@@ -16,17 +16,17 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 	private SerialPort port;
 	private LogMonitor lmBuildCompile, lmRuntime;
 
-	public ArduinoSerialResolver(String comPortName) {
+	public ArduinoSerialResolver(String comPort, String buildLogFile, String runtimeLogFile) {
 		try {
-			port = new SerialPort(comPortName);
+			port = new SerialPort(comPort);
 			port.openPort();
 			port.setParams(9600, 8, 1, 0);
 			int mask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR;
 			port.setEventsMask(mask);
 			port.addEventListener(this);
 			
-			lmBuildCompile = new LogMonitor(new File("build.txt"));
-			lmRuntime = new LogMonitor(new File("run.txt"));
+			lmBuildCompile = new LogMonitor(new File(buildLogFile));
+			lmRuntime = new LogMonitor(new File(runtimeLogFile));
 		} catch (SerialPortException e) {
 			DialogBox.showSystemMessage(e);
 			return;
@@ -36,9 +36,6 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 	}
 
 	public void serialEvent(SerialPortEvent event) {
-		
-		
-		
 		if (event.isRXCHAR() && event.getEventValue() > 0) {
 			try {
 				String receivedData = port.readString(1).trim().replace("\n", "");//.readString(event.getEventValue());

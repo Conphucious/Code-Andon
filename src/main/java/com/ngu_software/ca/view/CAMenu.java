@@ -61,10 +61,12 @@ public class CAMenu {
 				miAction.setEnabled(false);
 
 				String port = propsManager.getProps().getComPort();
+				String buildLogFile = propsManager.getProps().getBuildLogFile();
+				String runtimeLogFile = propsManager.getProps().getRuntimeLogFile();
 				if (port == null || port.trim().isEmpty()) {
 					DialogBox.portNotSetMessage();
 				} else {
-					arduinoSerialResolver = new ArduinoSerialResolver(port);
+					arduinoSerialResolver = new ArduinoSerialResolver(port, buildLogFile, runtimeLogFile);
 				}
 			} else if (miAction.getLabel().equals(ACTION_TEXT[1])) {
 				arduinoSerialResolver.close();
