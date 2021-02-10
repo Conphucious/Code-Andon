@@ -16,6 +16,7 @@ public class LogMonitor {
 		fileLastModified = file.lastModified();
 	}
 
+	// Use modified in ArduinoSerialResolver section
 	public boolean wasModified() {
 		return file.lastModified() != fileLastModified;
 	}
@@ -25,30 +26,40 @@ public class LogMonitor {
 	}
 
 	public boolean isError() {
-		return true;
+		return getCriteria() == CAState.ERROR;
 	}
 
 	public boolean isWarning() {
-		return true;
+		return getCriteria() == CAState.WARNING;
 	}
 
 	public boolean isSuccessful() {
-		return !wasModified() || getCriteria() == CAState.WARNING;
+		return getCriteria() == CAState.SUCCESS;
 	}
 
 	private CAState getCriteria() {
-		Scanner scanner;
+		Scanner scanner = null;
+		int warnings = 0;
+		
 		try {
 			scanner = new Scanner(file);
 			while (scanner.hasNextLine()) {
-				System.out.println(scanner.nextLine());
+				String line = scanner.nextLine();
+				if (line.trim().startsWith("[ERROR]")) {
+					return CAState.ERROR;
+				} else if (line.trim().startsWith("[WARNING]")) {
+					warnings++;
+				}
 			}
-			scanner.close();
 		} catch (FileNotFoundException e) {
 			DialogBox.showSystemMessage(e);
+		} finally {
+			if (scanner != null) {
+				scanner.close();
+			}
 		}
-
-		return CAState.SUCCESS;
+		
+		return warnings > 0 ? CAState.WARNING : CAState.SUCCESS;
 	}
 
 }
