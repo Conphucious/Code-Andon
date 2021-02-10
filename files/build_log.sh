@@ -4,5 +4,5 @@
 # make second cli arg the file path which we take in and read back (saved from last run. Maybe model?).
 
 cd $1
-mvn clean install >> "test.txt"
+mvn clean install > "build.log"
 

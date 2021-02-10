@@ -21,8 +21,7 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 			port = new SerialPort(comPort);
 			port.openPort();
 			port.setParams(9600, 8, 1, 0);
-			int mask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR;
-			port.setEventsMask(mask);
+			port.setEventsMask(SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR);
 			port.addEventListener(this);
 			
 			lmBuildCompile = new LogMonitor(new File(buildLogFile));
@@ -38,6 +37,7 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 	public void serialEvent(SerialPortEvent event) {
 		if (event.isRXCHAR() && event.getEventValue() > 0) {
 			try {
+				// need token here to resolve start and end of serial command.
 				String receivedData = port.readString(1).trim().replace("\n", "");//.readString(event.getEventValue());
 				if (!receivedData.isEmpty()) {
 					System.out.println("Received response: " + receivedData);

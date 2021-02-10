@@ -16,4 +16,8 @@ log/
 target/
 
 # Code Andon
-port.sys
+application.capf
+build.txt
+build.log
+runtime.txt
+runtime.log
