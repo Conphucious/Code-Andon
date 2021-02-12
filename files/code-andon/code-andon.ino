@@ -17,6 +17,8 @@ const String IDENTIFIER_LIGHT_RED = "RED";
 const String IDENTIFIER_BUTTON_OVERRIDE = "OFF";
 
 // Indicator messages
+const String BUFFER_START_TOKEN = "#";
+const String BUFFER_END_TOKEN = "!";
 const String BUFFER_MESSAGE_STANDBY = "Waiting for message...";
 const String BUFFER_MESSAGE_RESET = "Resetting...";
 
@@ -35,22 +37,38 @@ void setup() {
 }
 
 void loop() {
-  Serial.write("#");
+  Serial.println(BUFFER_START_TOKEN);
   
   if (Serial.available() > 0) {
     String input = Serial.readString();
     Serial.println(input);
-    Serial.println("INPUT");
-    digitalWrite(RELAY_PIN_LIGHT_RED, LOW);
-    currentActivePin = RELAY_PIN_LIGHT_RED;
+
+    if (input == IDENTIFIER_LIGHT_GREEN) {
+      handlePin(RELAY_PIN_LIGHT_GREEN);
+//      digitalWrite(RELAY_PIN_LIGHT_GREEN, LOW);
+    } else if (input == IDENTIFIER_LIGHT_YELLOW) {
+      handlePin(RELAY_PIN_LIGHT_YELLOW);
+//      digitalWrite(RELAY_PIN_LIGHT_YELLOW, LOW);
+    } else if (input == IDENTIFIER_LIGHT_RED) {
+      handlePin(RELAY_PIN_LIGHT_RED);
+//      digitalWrite(RELAY_PIN_LIGHT_RED, LOW);
+    }
+
+//    digitalWrite(RELAY_PIN_LIGHT_RED, LOW);
+//    currentActivePin = RELAY_PIN_LIGHT_RED;
   } else {
-    Serial.write("NO");
     digitalWrite(RELAY_PIN_LIGHT_RED, HIGH);
     digitalWrite(RELAY_PIN_LIGHT_YELLOW, HIGH);
     digitalWrite(RELAY_PIN_LIGHT_GREEN, HIGH);
-//    Serial.println("!");
   }
-  Serial.write("!");
+  
+  Serial.println(BUFFER_END_TOKEN);
+
+
+
+
+
+
 
   if (digitalRead(BUTTON_PIN_OVERRIDE) == LOW) {
     Serial.println("BTN");
@@ -59,16 +77,6 @@ void loop() {
     digitalWrite(RELAY_PIN_LIGHT_GREEN, HIGH);
   }
 
-  delay(500);
-  if (currentActivePin == RELAY_PIN_LIGHT_RED) {
-    digitalWrite(RELAY_PIN_LIGHT_RED, HIGH);
-    Serial.print("AYE");
-  }
-
-//  if (digitalRead(BUTTON_PIN_OVERRIDE) == HIGH) {
-//    digitalWrite(RELAY_PIN_LIGHT_RED, LOW);
-//    digitalWrite(RELAY_PIN_LIGHT_YELLOW, LOW);
-//    digitalWrite(RELAY_PIN_LIGHT_GREEN, LOW);
 //  } else if (Serial.available() > 0) {
 //    char input = Serial.read();
 //    // how to make flashing?
@@ -93,7 +101,7 @@ void loop() {
   delay(1000);
 }
 
-bool isActivated(char input, char identifier, int relayPin) {
+bool isActivated(String input, String identifier, int relayPin) {
   return (input == identifier) && (currentActivePin != relayPin);
 }
 
@@ -112,8 +120,8 @@ void handlePin(int pin) {
 }
 
 void triggerAndReset(int activePin, int unactivePinA, int unactivePinB) {
-  digitalWrite(activePin, HIGH);
+  digitalWrite(activePin, LOW);
   currentActivePin = activePin;
-  digitalWrite(unactivePinA, LOW);
-  digitalWrite(unactivePinB, LOW);
+  digitalWrite(unactivePinA, HIGH);
+  digitalWrite(unactivePinB, HIGH);
 }

@@ -51,7 +51,7 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 	                else if (startingToken == true) {
 	                    if (b == '!') {
 	                        startingToken = false;
-	                        System.out.println("> " + message.toString().trim());
+//	                        System.out.println("> " + message.toString().trim());
 	                        if (lmBuildCompile != null && lmRuntime != null) {
 	    						if (lmBuildCompile.isSuccessful() && lmRuntime.isSuccessful()) {
 	    							port.writeString(SerialCommand.TX_GREEN_LIGHT.getValue());
