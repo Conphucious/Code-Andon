@@ -111,6 +111,7 @@ public class CAMenu {
 		});
 
 		miExit.addActionListener(e -> {
+			// stop first?
 			System.exit(0);
 		});
 	}

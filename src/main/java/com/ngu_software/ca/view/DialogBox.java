@@ -51,7 +51,6 @@ public class DialogBox {
          int returnValue = jfc.showOpenDialog(null);
 
          if (returnValue == JFileChooser.APPROVE_OPTION) {
-             File selectedFile = jfc.getSelectedFile();
              return jfc.getSelectedFile();
          }
          

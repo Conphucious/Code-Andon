@@ -11,10 +11,10 @@ const int RELAY_PIN_LIGHT_RED = 4;
 const int BUTTON_PIN_OVERRIDE = 7;
 
 // Set serial identifiers for comparison
-const char IDENTIFIER_LIGHT_GREEN = 'g';
-const char IDENTIFIER_LIGHT_YELLOW = 'y';
-const char IDENTIFIER_LIGHT_RED = 'r';
-const char IDENTIFIER_BUTTON_OVERRIDE = 'o';
+const String IDENTIFIER_LIGHT_GREEN = "GREEN";
+const String IDENTIFIER_LIGHT_YELLOW = "YELLOW";
+const String IDENTIFIER_LIGHT_RED = "RED";
+const String IDENTIFIER_BUTTON_OVERRIDE = "OFF";
 
 // Indicator messages
 const String BUFFER_MESSAGE_STANDBY = "Waiting for message...";
@@ -35,19 +35,22 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("W");
+  Serial.write("#");
   
   if (Serial.available() > 0) {
-    char input = Serial.read();
+    String input = Serial.readString();
     Serial.println(input);
+    Serial.println("INPUT");
     digitalWrite(RELAY_PIN_LIGHT_RED, LOW);
     currentActivePin = RELAY_PIN_LIGHT_RED;
   } else {
-    Serial.println("N");
+    Serial.write("NO");
     digitalWrite(RELAY_PIN_LIGHT_RED, HIGH);
     digitalWrite(RELAY_PIN_LIGHT_YELLOW, HIGH);
     digitalWrite(RELAY_PIN_LIGHT_GREEN, HIGH);
+//    Serial.println("!");
   }
+  Serial.write("!");
 
   if (digitalRead(BUTTON_PIN_OVERRIDE) == LOW) {
     Serial.println("BTN");
