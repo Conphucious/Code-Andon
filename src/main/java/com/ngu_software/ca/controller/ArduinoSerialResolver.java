@@ -16,9 +16,11 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 
 	private SerialPort port;
 	private LogMonitor lmBuildCompile, lmRuntime;
-	
+
 	private StringBuilder message = new StringBuilder();
 	private Boolean startingToken = false;
+
+	private Boolean isSetDisabled = false;
 
 	public ArduinoSerialResolver(String comPort, String buildLogFile, String runtimeLogFile) {
 		try {
@@ -38,40 +40,45 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 		CAMenu.toggleActionMenuItem();
 	}
 
-	
+	// Optimize all the if statements.
 	public void serialEvent(SerialPortEvent event) {
-		if(event.isRXCHAR() && event.getEventValue() > 0){
-	        try {
-	            byte buffer[] = port.readBytes();
-	            for (byte b: buffer) {
-	                if (b == '#') {
-	                    startingToken = true;
-	                    message.setLength(0);
-	                }
-	                else if (startingToken == true) {
-	                    if (b == '!') {
-	                        startingToken = false;
-//	                        System.out.println("> " + message.toString().trim());
-	                        if (lmBuildCompile != null && lmRuntime != null) {
-	    						if (lmBuildCompile.isSuccessful() && lmRuntime.isSuccessful()) {
-	    							port.writeString(SerialCommand.TX_GREEN_LIGHT.getValue());
-	    						} else if (lmBuildCompile.isError() || lmRuntime.isError()) {
-	    							port.writeString(SerialCommand.TX_RED_LIGHT.getValue());
-	    						} else if (lmBuildCompile.isWarning() || lmRuntime.isWarning()) {
-	    							port.writeString(SerialCommand.TX_YELLOW_LIGHT.getValue());
-	    						}
-	    					}
-	                    }
-	                    else {
-	                        message.append((char)b);
-	                    }
-	                }
-	            }                
-	        }
-	        catch (SerialPortException e) {
-	            DialogBox.showSystemMessage(e);
-	        }
-	    }
+		if (event.isRXCHAR() && event.getEventValue() > 0) {
+			try {
+				byte buffer[] = port.readBytes();
+				for (byte b : buffer) {
+					if (b == '#') {
+						startingToken = true;
+						message.setLength(0);
+					} else if (startingToken == true) {
+						if (b == '!') {
+							startingToken = false;
+							if (lmBuildCompile != null && lmRuntime != null) {		// reduce the if statements. Maybe function?
+								if (!isSetDisabled) {
+									if (lmBuildCompile.isSuccessful() && lmRuntime.isSuccessful()) {
+										port.writeString(SerialCommand.TX_GREEN_LIGHT.getValue());
+									} else if (lmBuildCompile.isError() || lmRuntime.isError()) {
+										port.writeString(SerialCommand.TX_RED_LIGHT.getValue());
+									} else if (lmBuildCompile.isWarning() || lmRuntime.isWarning()) {
+										port.writeString(SerialCommand.TX_YELLOW_LIGHT.getValue());
+									}
+								}
+								
+								if (message.toString().trim().equals(SerialCommand.TX_RESET_PRESSED.getValue())) {
+									isSetDisabled = true;
+								} else if (lmBuildCompile.wasModified()) { //lmRuntime.isSuccessful
+									System.out.println("MODIFIED");
+									isSetDisabled = false;
+								}
+							}
+						} else {
+							message.append((char) b);
+						}
+					}
+				}
+			} catch (SerialPortException e) {
+				DialogBox.showSystemMessage(e);
+			}
+		}
 	}
 
 	public void close() {

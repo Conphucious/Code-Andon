@@ -16,7 +16,6 @@ public class LogMonitor {
 		fileLastModified = file.lastModified();
 	}
 
-	// Use modified in ArduinoSerialResolver section
 	public boolean wasModified() {
 		return file.lastModified() != fileLastModified;
 	}
@@ -42,6 +41,7 @@ public class LogMonitor {
 		int warnings = 0;
 		
 		try {
+			updateFile();
 			scanner = new Scanner(file);
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
