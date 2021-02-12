@@ -26,18 +26,18 @@ public class LogMonitor {
 	}
 
 	public boolean isError() {
-		return getCriteria() == CAState.ERROR;
+		return getCriteria() == LogState.ERROR;
 	}
 
 	public boolean isWarning() {
-		return getCriteria() == CAState.WARNING;
+		return getCriteria() == LogState.WARNING;
 	}
 
 	public boolean isSuccessful() {
-		return getCriteria() == CAState.SUCCESS;
+		return getCriteria() == LogState.SUCCESS;
 	}
 
-	private CAState getCriteria() {
+	private LogState getCriteria() {
 		Scanner scanner = null;
 		int warnings = 0;
 		
@@ -46,7 +46,7 @@ public class LogMonitor {
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
 				if (line.trim().startsWith("[ERROR]")) {
-					return CAState.ERROR;
+					return LogState.ERROR;
 				} else if (line.trim().startsWith("[WARNING]")) {
 					warnings++;
 				}
@@ -59,7 +59,7 @@ public class LogMonitor {
 			}
 		}
 		
-		return warnings > 0 ? CAState.WARNING : CAState.SUCCESS;
+		return warnings > 0 ? LogState.WARNING : LogState.SUCCESS;
 	}
 
 }

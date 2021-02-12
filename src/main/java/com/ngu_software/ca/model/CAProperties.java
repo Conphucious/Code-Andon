@@ -26,7 +26,7 @@ public class CAProperties implements Serializable {
 	}
 
 	public String getBuildLogFile() {
-		return buildLogFile;
+		return buildLogFile.isEmpty() ? null : buildLogFile;
 	}
 
 	public void setBuildLogFile(String buildLogFile) {
@@ -34,7 +34,7 @@ public class CAProperties implements Serializable {
 	}
 
 	public String getRuntimeLogFile() {
-		return runtimeLogFile;
+		return runtimeLogFile.isEmpty() ? null : runtimeLogFile;
 	}
 
 	public void setRuntimeLogFile(String runtimeLogFile) {

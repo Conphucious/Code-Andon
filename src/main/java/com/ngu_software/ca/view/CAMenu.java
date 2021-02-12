@@ -26,7 +26,7 @@ public class CAMenu {
 	private CAPropertiesManager propsManager;
 
 	public CAMenu() {
-		initialize(); // load previous port by saving to file and loading?
+		initialize();
 		populate();
 		setEvents();
 		setProperties();
@@ -56,15 +56,16 @@ public class CAMenu {
 	}
 
 	private void setEvents() {
-		miAction.addActionListener(e -> { // need to check log files here too.
+		miAction.addActionListener(e -> {
 			if (miAction.getLabel().equals(ACTION_TEXT[0])) {
 				miAction.setEnabled(false);
-
 				String port = propsManager.getProps().getComPort();
 				String buildLogFile = propsManager.getProps().getBuildLogFile();
 				String runtimeLogFile = propsManager.getProps().getRuntimeLogFile();
 				if (port == null || port.trim().isEmpty()) {
-					DialogBox.portNotSetMessage();
+					DialogBox.errorPortNotSetMessage();
+				} else if (buildLogFile == null || runtimeLogFile == null) {
+					DialogBox.errorLogFilesNullMessage();
 				} else {
 					arduinoSerialResolver = new ArduinoSerialResolver(port, buildLogFile, runtimeLogFile);
 				}
@@ -78,7 +79,7 @@ public class CAMenu {
 			setOptionVisiblity(false);
 			String port = DialogBox.getPort(propsManager.getProps().getComPort());
 			if (port == null) {
-				DialogBox.noPortsAvailableMessage();
+				DialogBox.errorNoPortsAvailableMessage();
 			} else {
 				propsManager.saveComPort(port);
 			}
@@ -111,7 +112,9 @@ public class CAMenu {
 		});
 
 		miExit.addActionListener(e -> {
-			// stop first?
+			if (arduinoSerialResolver != null) {
+				arduinoSerialResolver.close();
+			}
 			System.exit(0);
 		});
 	}

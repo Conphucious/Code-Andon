@@ -76,7 +76,9 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 
 	public void close() {
 		try {
-			port.closePort();
+			if (port.isOpened()) {
+				port.closePort();
+			}
 			CAMenu.toggleActionMenuItem();
 		} catch (SerialPortException e) {
 			e.printStackTrace();

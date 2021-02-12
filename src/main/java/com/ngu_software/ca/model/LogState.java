@@ -1,6 +1,6 @@
 package com.ngu_software.ca.model;
 
-public enum CAState {
+public enum LogState {
 	
 	ERROR,
 	WARNING,

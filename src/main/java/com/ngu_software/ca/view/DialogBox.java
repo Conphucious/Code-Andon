@@ -24,18 +24,21 @@ public class DialogBox {
     }
 
     // ERROR MESSAGES
-    public static void portNotSetMessage() {
-        JOptionPane.showMessageDialog(null, "COM Port is null", TITLE, 1);
+    public static void errorPortNotSetMessage() {
+        JOptionPane.showMessageDialog(null, "COM Port is null!", TITLE, 1);
     }
     
-    public static void noPortsAvailableMessage() {
-        JOptionPane.showMessageDialog(null, "No COM Ports available", TITLE, 1);
+    public static void errorNoPortsAvailableMessage() {
+        JOptionPane.showMessageDialog(null, "No COM Ports available!", TITLE, 1);
     }
     
-    public static void portFileLoadErrorMessage() {
+    public static void errorLogFilesNullMessage() {
+		JOptionPane.showMessageDialog(null, "No log files set!", TITLE, 1);
+	}
+    
+    public static void errorPortFileLoadErrorMessage() {
         JOptionPane.showMessageDialog(null, "An error has occured loading last set port!", TITLE, 1);
     }
-
     
     // INPUTS
     public static String getPort(String currentPort) {
@@ -56,6 +59,5 @@ public class DialogBox {
          
          return null;
     }
-
 
 }

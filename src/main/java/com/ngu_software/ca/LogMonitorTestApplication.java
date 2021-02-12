@@ -4,13 +4,12 @@ import java.io.File;
 
 import com.ngu_software.ca.model.LogMonitor;
 
-public class Test {
+public class LogMonitorTestApplication {
 
 	public static void main(String[] args) {
-//		File asd = DialogBox.getLogFile();
-//		System.out.println(asd.toString());
 		LogMonitor build = new LogMonitor(new File("/Users/nguyen/Projects/Programming/Java/Code Andon/build.txt"));
 		
+		System.out.println("SUCCESS\tWARNING\tERROR\n" + "-----------------------");
 		while (true) {
 			try {
 				Thread.sleep(1000);
