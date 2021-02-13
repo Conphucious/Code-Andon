@@ -46,6 +46,24 @@
                     <exclude>META-INF/versions/9/module-info.class</exclude>
                   </excludes>
                 </filter>
+                <filter>
+                  <artifact>jssc:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>slf4j-api:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>slf4j-simple:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*</exclude>
+                  </excludes>
+                </filter>
               </filters>
             </configuration>
           </execution>
