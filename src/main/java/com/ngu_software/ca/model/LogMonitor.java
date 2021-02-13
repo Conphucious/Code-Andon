@@ -2,6 +2,7 @@ package com.ngu_software.ca.model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 import com.ngu_software.ca.view.DialogBox;
@@ -13,7 +14,7 @@ public class LogMonitor {
 
 	public LogMonitor(File file) {
 		this.file = file;
-		fileLastModified = file.lastModified();
+		clearFileContents();
 	}
 
 	public boolean wasModified() {
@@ -36,10 +37,22 @@ public class LogMonitor {
 		return getCriteria() == LogState.SUCCESS;
 	}
 
+	public void clearFileContents() {
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter(file);
+			writer.print("");
+			writer.close();
+			updateFile();
+		} catch (FileNotFoundException e) {
+			DialogBox.showSystemMessage(e);
+		}
+	}
+
 	private LogState getCriteria() {
 		Scanner scanner = null;
 		int warnings = 0;
-		
+
 		try {
 			updateFile();
 			scanner = new Scanner(file);
@@ -58,7 +71,7 @@ public class LogMonitor {
 				scanner.close();
 			}
 		}
-		
+
 		return warnings > 0 ? LogState.WARNING : LogState.SUCCESS;
 	}
 

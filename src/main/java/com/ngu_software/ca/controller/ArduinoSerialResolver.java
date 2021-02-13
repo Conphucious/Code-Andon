@@ -20,8 +20,9 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 	private StringBuilder message = new StringBuilder();
 	private Boolean startingToken = false;
 
+	private Boolean isStartup = true;
 	private Boolean isSetDisabled = false;
-
+	
 	public ArduinoSerialResolver(String comPort, String buildLogFile, String runtimeLogFile) {
 		try {
 			port = new SerialPort(comPort);
@@ -36,7 +37,6 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 			DialogBox.showSystemMessage(e);
 			return;
 		}
-
 		CAMenu.toggleActionMenuItem();
 	}
 
@@ -51,9 +51,12 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 						message.setLength(0);
 					} else if (startingToken == true) {
 						if (b == '!') {
+							if (lmBuildCompile.wasModified() || lmRuntime.wasModified()) { // just to keep it initially off. Maybe move scope?
+								isStartup = false;
+							}
 							startingToken = false;
 							if (lmBuildCompile != null && lmRuntime != null) {		// reduce the if statements. Maybe function?
-								if (!isSetDisabled) {
+								if (!isSetDisabled && !isStartup) {
 									if (lmBuildCompile.isSuccessful() && lmRuntime.isSuccessful()) {
 										port.writeString(SerialCommand.TX_GREEN_LIGHT.getValue());
 									} else if (lmBuildCompile.isError() || lmRuntime.isError()) {
@@ -62,11 +65,10 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 										port.writeString(SerialCommand.TX_YELLOW_LIGHT.getValue());
 									}
 								}
-								
 								if (message.toString().trim().equals(SerialCommand.TX_RESET_PRESSED.getValue())) {
 									isSetDisabled = true;
-								} else if (lmBuildCompile.wasModified()) { //lmRuntime.isSuccessful
-									System.out.println("MODIFIED");
+									lmRuntime.clearFileContents();
+								} else if (lmBuildCompile.wasModified() || (lmRuntime.wasModified() && !lmRuntime.isSuccessful())) {
 									isSetDisabled = false;
 								}
 							}
@@ -79,6 +81,11 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 				DialogBox.showSystemMessage(e);
 			}
 		}
+	}
+	
+	public void resetFiles() {
+		lmBuildCompile.clearFileContents();
+		lmRuntime.clearFileContents();
 	}
 
 	public void close() {

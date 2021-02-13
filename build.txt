@@ -1,3 +1,0 @@
-[WARNING]
-Failed to load class "org.slf4j.impl.StaticLoggerBinder".
-[ERROR]

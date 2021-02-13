@@ -70,6 +70,7 @@ public class CAMenu {
 					arduinoSerialResolver = new ArduinoSerialResolver(port, buildLogFile, runtimeLogFile);
 				}
 			} else if (miAction.getLabel().equals(ACTION_TEXT[1])) {
+				arduinoSerialResolver.resetFiles();
 				arduinoSerialResolver.close();
 			}
 			miAction.setEnabled(true);
