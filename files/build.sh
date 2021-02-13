@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Arg0 [MANDATORY]: project path
-# Arg1 [MANDATORY]: file name
-# Arg3 [OPTIONAL]: mvn flags
+# Arg1 [MANDATORY]: build log file path
+# Arg3 [OPTIONAL]: boolean value for ignoring warnings
 
 stdError () {
     echo >&2 "$@"
@@ -15,8 +15,12 @@ grep -q -i -E '((.*?).log)|((.*?).txt)' <<< $file || stdError "Log or txt file r
 
 
 path=$1
-fileName=$2
-#mvnFlags=$([ -z $3 ] && echo '| grep -v "WARNING"' || echo $3)
+logPath=$2
 
 cd $path
-mvn clean install > $2 $3
+
+if [ "$3" == "true" ]; then
+    ((mvn clean install | grep -v "WARNING") > $logPath)
+else
+    (mvn clean install > $logPath)
+fi
