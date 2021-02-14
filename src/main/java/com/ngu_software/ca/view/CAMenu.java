@@ -33,7 +33,7 @@ public class CAMenu {
 	}
 
 	private void initialize() {
-		trayIcon = new TrayIcon(new ImageIcon("icon.png").getImage());
+		trayIcon = new TrayIcon(new ImageIcon("./icon.png").getImage());
 		menu = new PopupMenu();
 		miAction = new MenuItem(ACTION_TEXT[0]);
 		miSetPort = new MenuItem("Set COM Arduino Port");
@@ -105,6 +105,9 @@ public class CAMenu {
 
 		miInformation.addActionListener(e -> {
 			setOptionVisiblity(false);
+			if (propsManager.getProps() != null) {
+				
+			}
 			DialogBox.showMessage("Current Port: " + propsManager.getProps().getComPort() + "\n" 
 					+ "Build Log File: " + propsManager.getProps().getBuildLogFile() + "\n" 
 					+ "Runtime Log File: " + propsManager.getProps().getRuntimeLogFile() + "\n\n" 

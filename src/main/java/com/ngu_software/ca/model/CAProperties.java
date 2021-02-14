@@ -14,7 +14,9 @@ public class CAProperties implements Serializable {
 	}
 	
 	public CAProperties() {
-		
+		this.comPort = "";
+		this.buildLogFile = "";
+		this.runtimeLogFile = "";
 	}
 	
 	public String getComPort() {
@@ -26,7 +28,7 @@ public class CAProperties implements Serializable {
 	}
 
 	public String getBuildLogFile() {
-		return buildLogFile.isEmpty() ? null : buildLogFile;
+		return buildLogFile;
 	}
 
 	public void setBuildLogFile(String buildLogFile) {
@@ -34,7 +36,7 @@ public class CAProperties implements Serializable {
 	}
 
 	public String getRuntimeLogFile() {
-		return runtimeLogFile.isEmpty() ? null : runtimeLogFile;
+		return runtimeLogFile;
 	}
 
 	public void setRuntimeLogFile(String runtimeLogFile) {
