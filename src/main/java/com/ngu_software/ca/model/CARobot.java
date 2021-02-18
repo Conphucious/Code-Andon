@@ -7,7 +7,9 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class CARobot {
@@ -48,11 +50,18 @@ public class CARobot {
         sendKey(KeyEvent.VK_CONTROL, KeyEvent.VK_C);
         sendKey(KeyEvent.VK_ESCAPE);
 
+        robot.mouseMove(0, 0);
+        robot.mouseMove(900, 62);
+        robot.mousePress(InputEvent.BUTTON1_MASK);
+        robot.mouseRelease(InputEvent.BUTTON1_MASK);
+        robot.mousePress(InputEvent.BUTTON1_MASK);
+        robot.mouseRelease(InputEvent.BUTTON1_MASK);
+
         return (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
     }
 
     private void setJsClipboard() {
-        String text = "avascript:function copyText(){var n=document.documentElement.innerHTML,o=\"N/A\";o=n.includes(\"Compile Error\")||n.includes('<div class=\"error__2Ft1\">Wrong Answer</div>')?\"[ERROR]\":n.includes('<div class=\"wrong-answer__6zc1\">Wrong Answer</div>')?\"[WARNING]\":\"[INFO]\",window.prompt(\"TKJ Processor\",o)}copyText();";
+        String text = "avascript:function copyText(){var n=document.documentElement.innerHTML,o=\"N/A\";o=n.includes(\"Compile Error\")?\"[ERROR]\":n.includes('<div class=\"wrong-answer__6zc1\">Wrong Answer</div>')||n.includes('<div class=\"error__2Ft1\">Wrong Answer</div>')?\"[WARNING]\":\"[INFO]\",window.prompt(\"Copy to clipboard\",o)}copyText();";
         StringSelection stringSelection = new StringSelection(text);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, stringSelection);
