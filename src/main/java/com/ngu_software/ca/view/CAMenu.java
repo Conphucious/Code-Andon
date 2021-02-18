@@ -1,28 +1,29 @@
 package com.ngu_software.ca.view;
 
-import java.awt.AWTException;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
-import java.awt.SystemTray;
-import java.awt.TrayIcon;
-import java.io.File;
-
-import javax.swing.ImageIcon;
-
-import com.ngu_software.ca.controller.ArduinoSerialResolver;
+import com.ngu_software.ca.controller.ArduinoSerialResolverIDE;
+import com.ngu_software.ca.controller.ArduinoSerialResolverLC;
 import com.ngu_software.ca.model.CAPropertiesManager;
+import jssc.SerialPortList;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
 
 public class CAMenu {
 
 	private TrayIcon trayIcon;
 	private PopupMenu menu;
-	private static MenuItem miAction;
+	private static MenuItem miActionIde, miActionLeetCode;
 	private MenuItem miSetPort, miSetBuildFile, miSetRuntimeFile;
 	private MenuItem miInformation;
 	private MenuItem miExit;
 
-	public static final String[] ACTION_TEXT = { "Start", "Stop" };
-	private ArduinoSerialResolver arduinoSerialResolver;
+	public static final String[] ACTION_TEXT_IDE = { "Start IDE Listener", "Stop IDE Listener" };
+	public static final String[] ACTION_TEXT_LC = { "Start LeetCode Listener", "Stop LeetCode Listener" };
+	private ArduinoSerialResolverIDE arduinoSerialResolverIde;
+	private ArduinoSerialResolverLC arduinoSerialResolverLc;
 	private CAPropertiesManager propsManager;
 
 	public CAMenu() {
@@ -35,7 +36,8 @@ public class CAMenu {
 	private void initialize() {
 		trayIcon = new TrayIcon(new ImageIcon("./icon.png").getImage());
 		menu = new PopupMenu();
-		miAction = new MenuItem(ACTION_TEXT[0]);
+		miActionIde = new MenuItem(ACTION_TEXT_IDE[0]);
+		miActionLeetCode = new MenuItem(ACTION_TEXT_LC[0]);
 		miSetPort = new MenuItem("Set COM Arduino Port");
 		miSetBuildFile = new MenuItem("Set Build Log File");
 		miSetRuntimeFile = new MenuItem("Set Runtime Log File");
@@ -47,7 +49,8 @@ public class CAMenu {
 	}
 
 	private void populate() {
-		menu.add(miAction);
+		menu.add(miActionIde);
+		menu.add(miActionLeetCode);
 		menu.add(miSetPort);
 		menu.add(miSetBuildFile);
 		menu.add(miSetRuntimeFile);
@@ -56,9 +59,9 @@ public class CAMenu {
 	}
 
 	private void setEvents() {
-		miAction.addActionListener(e -> {
-			if (miAction.getLabel().equals(ACTION_TEXT[0])) {
-				miAction.setEnabled(false);
+		miActionIde.addActionListener(e -> {
+			if (miActionIde.getLabel().equals(ACTION_TEXT_IDE[0])) {
+				miActionIde.setEnabled(false);
 				String port = propsManager.getProps().getComPort();
 				String buildLogFile = propsManager.getProps().getBuildLogFile();
 				String runtimeLogFile = propsManager.getProps().getRuntimeLogFile();
@@ -67,19 +70,28 @@ public class CAMenu {
 				} else if (buildLogFile == null || runtimeLogFile == null) {
 					DialogBox.errorLogFilesNullMessage();
 				} else {
-					arduinoSerialResolver = new ArduinoSerialResolver(port, buildLogFile, runtimeLogFile);
+					arduinoSerialResolverIde = new ArduinoSerialResolverIDE(port, buildLogFile, runtimeLogFile);
 				}
-			} else if (miAction.getLabel().equals(ACTION_TEXT[1])) {
-				arduinoSerialResolver.resetFiles();
-				arduinoSerialResolver.close();
+			} else if (miActionIde.getLabel().equals(ACTION_TEXT_IDE[1])) {
+				arduinoSerialResolverIde.resetFiles();
+				arduinoSerialResolverIde.close();
 			}
-			miAction.setEnabled(true);
+			miActionIde.setEnabled(true);
+		});
+
+		miActionLeetCode.addActionListener(e -> {
+			if (miActionLeetCode.getLabel().equals(ACTION_TEXT_LC[0])) {
+				String port = propsManager.getProps().getComPort();
+				arduinoSerialResolverLc = new ArduinoSerialResolverLC(port);
+			} else {
+				arduinoSerialResolverLc.close();
+			}
 		});
 
 		miSetPort.addActionListener(e -> {
 			setOptionVisiblity(false);
 			String port = DialogBox.getPort(propsManager.getProps().getComPort());
-			if (port == null) {
+			if (!portsAvailable() && port == null) {
 				DialogBox.errorNoPortsAvailableMessage();
 			} else {
 				propsManager.saveComPort(port);
@@ -116,8 +128,8 @@ public class CAMenu {
 		});
 
 		miExit.addActionListener(e -> {
-			if (arduinoSerialResolver != null) {
-				arduinoSerialResolver.close();
+			if (arduinoSerialResolverIde != null) {
+				arduinoSerialResolverIde.close();
 			}
 			System.exit(0);
 		});
@@ -133,15 +145,23 @@ public class CAMenu {
 		}
 	}
 
+	private boolean portsAvailable() {
+		return SerialPortList.getPortNames().length > 0;
+	}
+
 	private void setOptionVisiblity(boolean isShown) {
 		for (int i = 0; i < menu.getItemCount() - 1; i++) {
 			menu.getItem(i).setEnabled(isShown);
 		}
 	}
 
-	public static void toggleActionMenuItem() {
-		String action = miAction.getLabel().equals(ACTION_TEXT[0]) ? ACTION_TEXT[1] : ACTION_TEXT[0];
-		miAction.setLabel(action);
+	public static void toggleIdeActionMenuItem() {
+		String action = miActionIde.getLabel().equals(ACTION_TEXT_IDE[0]) ? ACTION_TEXT_IDE[1] : ACTION_TEXT_IDE[0];
+		miActionIde.setLabel(action);
+	}
+	public static void toggleLcActionMenuItem() {
+		String action = miActionLeetCode.getLabel().equals(ACTION_TEXT_LC[0]) ? ACTION_TEXT_LC[1] : ACTION_TEXT_LC[0];
+		miActionLeetCode.setLabel(action);
 	}
 
 }

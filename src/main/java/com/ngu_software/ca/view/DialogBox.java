@@ -39,7 +39,7 @@ public class DialogBox {
     public static void errorPortFileLoadErrorMessage() {
         JOptionPane.showMessageDialog(null, "An error has occured loading last set port!", TITLE, 1);
     }
-    
+
     // INPUTS
     public static String getPort(String currentPort) {
         String[] options = SerialPortList.getPortNames();

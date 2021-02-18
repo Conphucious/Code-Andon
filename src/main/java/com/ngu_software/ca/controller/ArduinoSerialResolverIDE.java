@@ -12,7 +12,7 @@ import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 
-public class ArduinoSerialResolver implements SerialPortEventListener {
+public class ArduinoSerialResolverIDE implements SerialPortEventListener {
 
 	private SerialPort port;
 	private LogMonitor lmBuildCompile, lmRuntime;
@@ -23,7 +23,7 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 	private Boolean isStartup = true;
 	private Boolean isSetDisabled = false;
 	
-	public ArduinoSerialResolver(String comPort, String buildLogFile, String runtimeLogFile) {
+	public ArduinoSerialResolverIDE(String comPort, String buildLogFile, String runtimeLogFile) {
 		try {
 			port = new SerialPort(comPort);
 			port.openPort();
@@ -37,7 +37,7 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 			DialogBox.showSystemMessage(e);
 			return;
 		}
-		CAMenu.toggleActionMenuItem();
+		CAMenu.toggleIdeActionMenuItem();
 	}
 
 	// Optimize all the if statements.
@@ -93,9 +93,9 @@ public class ArduinoSerialResolver implements SerialPortEventListener {
 			if (port.isOpened()) {
 				port.closePort();
 			}
-			CAMenu.toggleActionMenuItem();
+			CAMenu.toggleIdeActionMenuItem();
 		} catch (SerialPortException e) {
-			e.printStackTrace();
+			DialogBox.showSystemMessage(e);
 		}
 	}
 }

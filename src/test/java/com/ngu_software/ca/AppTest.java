@@ -5,15 +5,15 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * Unit test for simple App.
+ * Unit condition.js for simple App.
  */
 public class AppTest 
     extends TestCase
 {
     /**
-     * Create the test case
+     * Create the condition.js case
      *
-     * @param testName name of the test case
+     * @param testName name of the condition.js case
      */
     public AppTest( String testName )
     {
