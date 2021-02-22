@@ -61,7 +61,7 @@ public class CARobot {
     }
 
     private void setJsClipboard() {
-        String text = "avascript:function copyText(){var n=document.documentElement.innerHTML,o=\"N/A\";o=n.includes(\"Compile Error\")?\"[ERROR]\":n.includes('<div class=\"wrong-answer__6zc1\">Wrong Answer</div>')||n.includes('<div class=\"error__2Ft1\">Wrong Answer</div>')?\"[WARNING]\":\"[INFO]\",window.prompt(\"Copy to clipboard\",o)}copyText();";
+        String text = "avascript:function copyText(){var n=document.documentElement.innerHTML,o=\"N/A\";o=n.includes(\"Compile Error\")||n.includes('<div class=\"error__2Ft1\">Wrong Answer</div>')?\"[ERROR]\":n.includes('<div class=\"wrong-answer__6zc1\">Wrong Answer</div>')?\"[WARNING]\":\"[INFO]\",window.prompt(\"Copy to clipboard\",o)}copyText();";
         StringSelection stringSelection = new StringSelection(text);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, stringSelection);

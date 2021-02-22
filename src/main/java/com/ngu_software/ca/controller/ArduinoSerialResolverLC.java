@@ -100,6 +100,8 @@ public class ArduinoSerialResolverLC implements SerialPortEventListener, NativeK
             } catch (UnsupportedFlavorException e2) {
                 DialogBox.showSystemMessage(e2);
             }
+        } else if (e.getKeyCode() == NativeKeyEvent.VC_CONTROL_R) {
+            isKeyPressed = false;
         }
     }
 

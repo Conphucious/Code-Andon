@@ -41,9 +41,9 @@ avascript:function copyText() {
     var wrongAnswerSubmission = '<div class="error__2Ft1">Wrong Answer</div>';
     var result = 'N/A';
 
-    if (txt.includes(compileErrorRun)){
+    if (txt.includes(compileErrorRun) || txt.includes(wrongAnswerSubmission)){
         result = '[ERROR]';
-    } else if (txt.includes(wrongAnswerRun) || txt.includes(wrongAnswerSubmission)){
+    } else if (txt.includes(wrongAnswerRun)){
         result = '[WARNING]';
     } else {
         result = '[INFO]';
